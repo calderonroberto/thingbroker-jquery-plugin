@@ -117,7 +117,7 @@ var thingBrokerUrl = 'http://localhost:8080/thingbroker';
 
     function registerThing(params) {
       if (params.debug) 
-        console.log("Registering parent"+params.thingId);
+        console.log("Registering parent "+params.thingId);
       $.ajax({
         type: "POST",
         crossDomain: true,
@@ -208,16 +208,33 @@ var thingBrokerUrl = 'http://localhost:8080/thingbroker';
         }
       }
     };
+    function setCookie(c_name,value,exdays){
+       var exdate=new Date();
+       exdate.setDate(exdate.getDate() + exdays);
+       var c_value=escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString());
+       document.cookie=c_name + "=" + c_value;
+    }
+
 
     //if a cookie "display_id" is set: change thingid to add such id, unless functionality toggled false.
     function containerSafeThing(params) { 
-      if (params.container) {
-        var display=getCookie("display_id");
-        if (display!=null && display!="") {	  
-	  params.thingId = params.thingId + display;
-          if (params.debug)
-             console.log("Setting container safe thingId name "+params.thingId);
-	}
+       if (params.container) {
+          var display = '';
+          if ( location.href.indexOf("?") !== -1) {
+             var urlparams = location.href.split('?')[1].split('&');
+             data = {};
+             for (x in urlparams) {
+                data[urlparams[x].split('=')[0]] = urlparams[x].split('=')[1];
+             }
+             display = data.display_id;
+          } else {
+             display = getCookie("display_id");
+          }
+          if (display!=null && display!=="") {
+	    params.thingId = params.thingId + display;
+            if (params.debug)
+              console.log("Setting container safe thingId name "+params.thingId);
+	  } 
       }
       return params;
     };
@@ -325,14 +342,23 @@ jQuery.ThingBroker  = function(params) {
      return response;
   } 
 
-
   function containerSafeThingId(thingId) { 
-      var display=getCookie("display_id");
-      if (display!=null && display!="") {	  
-	thingId = thingId + display;
+     var display = '';
+     if ( location.href.indexOf("?") !== -1) {
+        var urlparams = location.href.split('?')[1].split('&');
+        data = {};
+        for (x in urlparams) {
+           data[urlparams[x].split('=')[0]] = urlparams[x].split('=')[1];
+        }
+        display = data.display_id;
+     } else {
+        display = getCookie("display_id");
+     }
+     if (display!=null && display!=="") {
+        params.thingId = params.thingId + display;
         if (params.debug)
-           console.log("Setting container safe thingId name "+thingId);
-      }    
+           console.log("Setting container safe thingId name "+params.thingId);
+    }
     return thingId;
   };
 
