@@ -1,14 +1,16 @@
-JQUERY BROKER PLUGIN
+JQUERY THINGBROKER PLUGIN
 
 ## VERSION
 
-Plugin version: 0.1.0
+Plugin version: 0.3.0
 Broker dependency: < 1.4.0
 
 ## CHANGE LOG
 2012.08.01-Roberto: First Version of this Requirements Document.
 2012.08.09-Roberto: First Version of the plugin.
-2012.10.29-Roberto: Second Version of the plugin using the new Thing Broker
+2012.10.29-Roberto: Second Version of the plugin using the new ThingBroker
+2012.03.08-Roberto: Third Version of the plugin using the latest version of ThingBroker supporting following
+
 
 ## INTRODUCTION
 
@@ -24,16 +26,16 @@ Mollie is moving content from one web-browser (her mobile) to another web-browse
 
 ## DEPENDENCIES
 
-The current plugin depends on the Thing Broker (https://github.com/magic-liam/thingbroker). You can run a self version of the broker on your local machine, or use the provided testing version available at http://kimberly.magic.ubc.ca:8080/thingbroker-web. Downloading this project and running the examples will work out of the box, as the testing version of the Thing Broker is the default backend for this plugin.
+The current plugin depends on the Thing Broker (https://github.com/magic-ubc/thingbroker). You can run a self version of the broker on your local machine, or use the provided testing version available at http://kimberly.magic.ubc.ca:8080/thingbroker. Downloading this project and running the examples will work out of the box, as the testing version of the Thing Broker is the default backend for this plugin.
 
 ## SECURITY CONCERNS AND SCALABILITY
 
-This solution is targeted at prototype and small applications. In a large application having numerous inter-connected objects across many applications, the number of listening objects becomes unmanageable and insecure. Please take this into consideration when developing your applications.
+This solution is targeted at prototype and small applications. In a large application having numerous inter-connected objects across many applications, the number of listening objects might become insecure. Please take this into consideration when developing your applications.
 
 ## DESIGN REQUIREMENTS
 
 * DOM objects are considered "things" on the web
-* Default callbacks are provided for basic common DOM operations (e.g. append, remove, etc) in JQuery, making object-to-object manipulations transparent.
+* Default callbacks are provided for basic common DOM operations (e.g. append, remove) in JQuery, making object-to-object manipulations transparent.
 
 ## ARCHITECTURE
 ```
@@ -41,7 +43,7 @@ This solution is targeted at prototype and small applications. In a large applic
 -----------------------           ---------------             --------------------
       DOM Object                   Non-web Client                  DOM Object
 -----------------------           ---------------             --------------------
-     Jquery plugin. <------------>     Broker   <---------->      Jquery plugin
+     Jquery plugin. <------------>  ThingBroker   <---------->      Jquery plugin
 -----------------------           ---------------             --------------------
       Jquery api                   DB      QUEUE                  Jquery api
 ------------------------          -----    ------             --------------------
@@ -52,22 +54,54 @@ Both applications might be served from the same server, and even the same applic
 ```
 [Object 1]           ----------------[Object 2]
    |                |
-   | Listens to     | Posts to           | Listens to
+   | Listens to     | Posts event        | Listens to
    |                |                    |
-[Topic 1]    <-------                 [Topic 2]
+[Thing 1]    <-------                [Thing 2]
 
 ```
-
-## CURRENT STATE AND CROSS-DOMAIN SUPPORT
-
-The above diagrams are the "desired" architecture of the plugin. However, due to the current state of the MAGICBroker doing cross-domain calls is cumbersome. To solve this the plugin HAS to be used with the brokerproxy.php file. This php script works together with the plugin to redirect ajax requests to other domains and parse the response to the javascript-based ajax call. This will be deprecated on the new version of the broker, which will use Jsonp responses and will allow crossdomain calls. For the moment being, you're stuck with having to place the brokerproxy.php file on the root directory of your application. Sorry.
 
 ## API
 
-Currently you have availability to three DOM operations with this plugin: append, remove and src. Append will append data to a brokerized DOM object, while remove will remove such data. Src is a bit tricky as is intended for updating the src value in an <img> object.
+Currently you have availability to four DOM operations with this plugin: append, prepend, remove and src. Append will append data to a brokerized DOM object, while remove will remove such data. Src is only intended for updating the src value in an <img> object.
 
+Given the following DOM objects:
 
 ```
+<div id="id"></div>
+<div id="id2"></div>
+<img id="imageid" src="image.jpg"></img>
+
+```
+
+You can have access to the following JQUERY manipulations:
+
+```
+JQUERY EVENTS
+(#id).thing({"append": "<p>helloworld</p>", to: "#id2"})
+(#id).thing({"prepend": "<p>helloworld</p>", to: "#id2"})
+(#id).thing({"remove": "<p>helloworld</p>", to: "#id2"})
+(#id).thing({"src": "http://otherhost/img.jpg", to: "#imageid"})
+
+LISTENER THING
+(#id).thing({listen:true})
+(#id).thing({listen:true, url: "http://yourownserver/thingbroker"})
+```
+
+If you want to have direct access to manipulating "things", or accessing their data you can make use of the following methods:
+
+```
+OTHER METHODS
+(#id).thing({"follow": "#id2"})
+
+THINGBROKER API METHODS (BUNDLED WITH THE JQUERY PLUGIN)
+
+$.ThingBroker({url: "http:yourownserver/thingbroker"}).postThing("thingId")
+$.ThingBroker().postEvent("thingId", {key:value})
+$.ThingBroker().getEvents("thingId")
+$.ThingBroker().getThing("thingId")
+```
+
+
 $('.class').broker(); Will subscribe the object with a class "class" to itself, i.e. a topic="class" and a clientID="class"
 
 $('.class').broker({listen:true}); Will subscribe the object, set repetitive ajax calls to listen for events, and define callback functions for append, remove and src.
@@ -81,7 +115,7 @@ $('.class').broker({append:'hello this is a message', to: 'class2'}); Will appen
 $('.class').broker({remove: 'this is a data sent previously', to: 'class2'}); Will remove child objects that contain the text "this is a data sent previously" within the object with class "class2"
 
 $('.class').broker({src:'imagesrc', to: 'class2'}); Will update the src parameter of the img object with class "class2"
-```
+
 
 
 ## IMPLEMENTED KEY-DATA PAIRS AND THEIR DOM OPERATIONS
@@ -90,13 +124,15 @@ If you're using raw events through your own custom plugin and want to communicat
 
 ```
 THE EVENT {"append": "data"}
-Appends "data" to a brokerized <div class'data'> as <p>data</p> 
-Appends "data" to a brokerized <ul class 'data'> as <li>data</li>
+Appends "data" to a DOM thing. Take into account that data must contain the DOM type. For example, to append a "paragraph" the object <div id="messages"></div>, you would need to send the event: {"append": "<p>Hello there</p>"}
+
 ```
+
 ```
 THE EVENT {"remove": "data"}
-Removes the element that contains the given data from the object listening to the event.
+Removes the element that matches the given data from the object listening to the event.
 ```
+
 ```
 THE EVENT {"src": "data"}
 Updates the src="" attribute of an image object listening to the event: <img src='data'></img>

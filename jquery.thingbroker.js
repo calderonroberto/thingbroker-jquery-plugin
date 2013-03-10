@@ -27,8 +27,8 @@ $.ThingBroker().getThing("thingId")
  */
 
 /*Nerve-wreking global variable*/
-//'http://kimberly.magic.ubc.ca:8080/thingbroker',
-var thingBrokerUrl = 'http://localhost:8080/thingbroker';
+//http://localhost:8080/thingbroker
+var thingBrokerUrl = 'http://kimberly.magic.ubc.ca:8080/thingbroker';
 
 (function($) {
   
@@ -220,6 +220,7 @@ var thingBrokerUrl = 'http://localhost:8080/thingbroker';
     function containerSafeThing(params) { 
        if (params.container) {
           var display = '';
+          var thingbroker_url = '';
           if ( location.href.indexOf("?") !== -1) {
              var urlparams = location.href.split('?')[1].split('&');
              data = {};
@@ -227,14 +228,21 @@ var thingBrokerUrl = 'http://localhost:8080/thingbroker';
                 data[urlparams[x].split('=')[0]] = urlparams[x].split('=')[1];
              }
              display = data.display_id;
+             thingbroker_url = decodeURIComponent(data.thingbroker_url);
           } else {
              display = getCookie("display_id");
           }
-          if (display!=null && display!=="") {
+          if (display!==null && display!=="" && display!==undefined) {
 	    params.thingId = params.thingId + display;
             if (params.debug)
               console.log("Setting container safe thingId name "+params.thingId);
 	  } 
+          if (thingbroker_url!==null && thingbroker_url!=="" && thingbroker_url!==undefined) {
+            params.url = thingbroker_url;
+            if (params.debug)
+              console.log("Setting container safe thingbroker_url "+params.url);
+          }
+
       }
       return params;
     };
@@ -254,7 +262,9 @@ jQuery.ThingBroker  = function(params) {
     params = $.extend({
         url:thingBrokerUrl,
 	thingId: '',
-        debug: false
+        event: {},
+        debug: false,
+        container: true
     },params);
 
   var getEvents = function(thingId, limit) {
@@ -320,12 +330,11 @@ jQuery.ThingBroker  = function(params) {
   }
 
   var postEvent = function(thingId, event) {
-     if (params.debug)
-        console.log("Sending event for "+thingId);
      var response = {}
      thingId = thingId.replace('#', '');
      thingId = containerSafeThingId(thingId);
-
+     if (params.debug)
+        console.log("Sending an event for "+thingId);
      $.ajax({
         async: false,
   	type: "POST",
@@ -344,6 +353,7 @@ jQuery.ThingBroker  = function(params) {
 
   function containerSafeThingId(thingId) { 
      var display = '';
+     var thingbroker_url = '';
      if ( location.href.indexOf("?") !== -1) {
         var urlparams = location.href.split('?')[1].split('&');
         data = {};
@@ -351,18 +361,24 @@ jQuery.ThingBroker  = function(params) {
            data[urlparams[x].split('=')[0]] = urlparams[x].split('=')[1];
         }
         display = data.display_id;
+        thingbroker_url = decodeURIComponent(data.thingbroker_url);
      } else {
         display = getCookie("display_id");
      }
-     if (display!=null && display!=="") {
-        params.thingId = params.thingId + display;
+     if (display!==null && display!=="" && display!==undefined) {
+        thingId = thingId + display;
         if (params.debug)
            console.log("Setting container safe thingId name "+params.thingId);
+    }
+    if (thingbroker_url!==null && thingbroker_url!=="" && thingbroker_url!==undefined) {
+            params.url = thingbroker_url;
+            if (params.debug)
+              console.log("Setting container safe thingbroker_url "+params.url);
     }
     return thingId;
   };
 
-    function getCookie(c_name){
+  function getCookie(c_name){
       var i,x,y,ARRcookies=document.cookie.split(";");
       for (i=0;i<ARRcookies.length;i++) {
         x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
