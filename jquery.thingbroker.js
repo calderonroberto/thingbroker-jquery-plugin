@@ -351,6 +351,24 @@ jQuery.ThingBroker  = function(params) {
      return response;
   } 
 
+  var putEvent = function(eventId, serverTimestamp, event) {
+     if (params.debug)
+        console.log("Updating event "+eventId);
+     $.ajax({
+        async: false,
+  	type: "PUT",
+        url: params.url+"/events/"+eventId+"?serverTimestamp="+serverTimestamp,
+        data: JSON.stringify(event),
+        contentType: "application/json",
+	dataType: "JSON",
+        success: function(json) {
+           response = json;
+        },
+         error: function(){console.log("Thingbroker Connection Error.")}
+     });   
+     return response;
+  }
+
   function containerSafeThingId(thingId) { 
      var display = '';
      var thingbroker_url = '';
@@ -393,6 +411,7 @@ jQuery.ThingBroker  = function(params) {
   return {
     postThing: postThing,
     postEvent: postEvent,
+    putEvent: putEvent,
     getEvents: getEvents,
     getThing: getThing
   }

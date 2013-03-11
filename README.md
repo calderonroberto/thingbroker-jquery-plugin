@@ -164,6 +164,7 @@ The following raw-methods are provided:
 ```
 $.ThingBroker({url: "http:yourownserver/thingbroker"}).postThing("thingId")
 $.ThingBroker().postEvent("thingId", {key:value})
+$.ThingBroker().putEvent("eventId", "serverTimestamp", {key:value}) #UNRELEASED: WILL CHANGE!
 $.ThingBroker().getEvents("thingId")
 $.ThingBroker().getThing("thingId")
 ```
