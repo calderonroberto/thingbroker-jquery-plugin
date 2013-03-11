@@ -106,7 +106,6 @@ Given the following DOM objects:
 <div id="id"></div>
 <div id="id2"></div>
 <img id="imageid" src="image.jpg"></img>
-
 ```
 
 You can have access to the following JQUERY manipulations:
@@ -177,6 +176,7 @@ Removes the element that matches the given data from the object.
 
 + THE EVENT {"src": "data"} (sent to thingID "image")
 Updates the src="" attribute of the image object:
+
 ```
 <img src='data' id="#image"></img>
 ```
