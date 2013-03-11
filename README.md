@@ -78,7 +78,7 @@ The jQuery plugin will create a thread that will not interfere with (1). In othe
 If you will be deploying and application on several displays you should consider the Cherry Container (https://github.com/ubc-magic/container) which takes care of configuring and managing such threading.
 
 
-## GLOBAL THING BROKER CONFIGURATION THROUGH PARAMETERS
+## GLOBAL THING BROKER CONFIGURATION
 
 Similar to "Thing Threading" this jQuery plugin provides the ability to configure the instance of ThingBroker that your application should use. This allows a single application to be deployed on top of different instances of ThingBroker without the need to change the application's code. The jQuery plugin looks for the URL parameter "thingbroker_url" to do this. Let's suppose we have an application hosted in:
 
