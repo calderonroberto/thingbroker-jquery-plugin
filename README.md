@@ -96,6 +96,22 @@ The jQuery plugin will create a thread that will not interfere with (1) and will
 
 If you will be deploying and application on several displays you should consider the Cherry Container (https://github.com/ubc-magic/container) which takes care of configuring and managing such threading.
 
+
+## USAGE
+
+Include jQuery > 1.7.2, and include the jquery.thingbroker.min.js plugin. For example:
+
+```
+<script type="text/javascript" src="jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="jquery.thingbroker.min.js"></script>
+```
+
+If you want to be up-to-date without needing to worry about updates within your applications you can use our NON-CDN version of the jquery plugin (below), which is always kept up to date. This version depends on the thingbroker instance running in kimberly.magic.ubc.ca:8080/thingbroker.
+
+```
+<script type="text/javascript" src="http://kimberly.magic.ubc.ca:8080/thingbroker/resources/jquery-plugin/jquery.thingbroker.min.js"></script>
+```
+
 ## JQUERY MANIPULATIONS API
 
 Currently you have availability to four DOM operations with this plugin: append, prepend, remove and src. Append will append data to a brokerized DOM object, prepend will prepend data to a brokerize DOM object, while remove will remove such data. Src is only intended for updating the src value in an <img> object.

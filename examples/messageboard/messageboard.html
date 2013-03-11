@@ -2,17 +2,15 @@
 <html lang="en">  
 <head>  
 <title>A simple message board</title>  
-<script type="text/javascript" src="jquery-1.7.2.min.js"></script>  
-<script type="text/javascript" src="jquery.broker.js"></script>  
-</head>  
-<body>  
-<p>Look into the code of index4.html to get started</p>
+<script type="text/javascript" src="../../jquery-1.7.2.min.js"></script>  
+<script type="text/javascript" src="../../jquery.thingbroker.min.js"></script>  
+</head>
+<body> 
 
-<div class="messageboard"></div>
+<div id="messageboard"></div>
 
-<!-- Uncomment below to brokerize -->
 <script type="text/javascript">
-$(".messageboard").broker({listen:true});
+$("#messageboard").thing({listen:true});
 </script>
 
 </body>

@@ -2,8 +2,8 @@
 <html>
 <head>
 <title>Basic GeoLocation Map</title>
-<script type="text/javascript" src="jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="jquery.broker.js"></script>
+<script type="text/javascript" src="../../jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="../../jquery.thingbroker.min.js"></script>
 <script type="text/javascript">
     function initGeolocation(){
         if( navigator.geolocation ){
@@ -22,17 +22,17 @@
 	$(".map").attr("src", image_url); 
     }
     function fail() {
-        // Could not obtain location
+        console.log("could not obtain location");
     }
 </script>
 </head>
 <body onload="initGeolocation();">
-   <img class="map" src=""></img>
+
+<img id="map" src=""></img>
 
 <script type="text/javascript"> 
-$(".map").click(function() {
-  //$(this).broker({src:'image1.jpg', to:'image'});
-  $(this).broker({src:$(this).attr('src'), to:'image'});
+$("#map").click(function() {
+  $(this).thing({src:$(this).attr('src'), to:'#imagemap'});
 });
 </script>
 

@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">  
+<html lang="en">  
+<head>  
+<title>Third Party Demo</title>  
+
+<script type="text/javascript" src="../../jquery-1.7.2.min.js"></script>  
+<script type="text/javascript" src="../../jquery.thingbroker.min.js"></script>  
+
+</head>  
+<body>  
+
+<img class="imagemap" src="image1.jpg"></img>
+
+<br>
+
+<a href="thirdparty.html" target="_blank">Third party data demo. Visit URL: get your location and append the image to the #imagemap object in this page</a>
+
+<script type="text/javascript"> 
+$("#imagemap").thing({listen:true});
+
+</script>
+
+</body>  
+</html>
