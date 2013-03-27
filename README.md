@@ -110,6 +110,7 @@ If you want to be up-to-date without needing to worry about updates within your 
 
 ```
 <script type="text/javascript" src="http://kimberly.magic.ubc.ca:8080/thingbroker/resources/jquery-plugin/jquery.thingbroker-0.3.0.min.js"></script>
+<script type="text/javascript" src="http://kimberly.magic.ubc.ca:8080/thingbroker/resources/jquery-plugin/jquery-1.7.2.min.js"></script>
 ```
 
 ## JQUERY MANIPULATIONS API
