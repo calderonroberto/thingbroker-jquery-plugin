@@ -285,10 +285,49 @@ jQuery.ThingBroker  = function(params) {
     return eventMap;
   }
 
-  var postThing = function(thingId) {
+  var postThing = function(json) {
+    if (params.debug) 
+       console.log("Registering "+json);    
+    if (json.thingId) {
+       json.thingId = json.thingId.replace('#', '');
+       json.thingId = containerSafeThingId(json.thingId);
+    }
+    var thingMap = {};
+    $.ajax({
+       type: "POST",
+       crossDomain: true,
+       url: params.url+"/things",
+       data: JSON.stringify(json),
+       contentType: "application/json",
+       dataType: "JSON",
+       error: function(json) {connectionError(json)},
+    });
+    return thingMap;    
+  }
+
+  var deleteThing = function(thingId) {
+    if (params.debug) 
+       console.log("Deleting "+thingId);    
+    thingId = thingId.replace('#', '');
+    var thingMap = {};
+    $.ajax({
+       type: "DELETE",
+       crossDomain: true,
+       url: params.url+"/things/"+thingId,
+       //data: '{"thingId": "'+thingId+'"}',
+       contentType: "application/json",
+       dataType: "JSON",
+       error: function(json) {connectionError(json)},
+    });
+    return thingMap;    
+  }
+
+
+
+  var postThingById = function(thingId) {
     if (params.debug) 
        console.log("Registering thing "+thingId);
-    thingId = thingId.replace('#', '');    
+    thingId = thingId.replace('#', '');
     thingId = containerSafeThingId(thingId);
     var thingMap = {};
     $.ajax({
@@ -305,7 +344,7 @@ jQuery.ThingBroker  = function(params) {
   
   var getThing = function(thingId) {
     if (params.debug) 
-       console.log("Getting thing "+thingID);
+       console.log("Getting thing "+thingId);
     thingId = thingId.replace('#', '');    
     thingId = containerSafeThingId(thingId);
     var thingMap = {};
@@ -327,8 +366,11 @@ jQuery.ThingBroker  = function(params) {
      var response = {}
      thingId = thingId.replace('#', '');
      thingId = containerSafeThingId(thingId);
-     if (params.debug)
+     if (params.debug) {
         console.log("Sending an event for "+thingId);
+        console.log(event);
+     }
+        
      $.ajax({
         async: false,
   	type: "POST",
@@ -443,7 +485,9 @@ jQuery.ThingBroker  = function(params) {
     getEvents: getEvents,
     getThing: getThing,
     postMetadata: postMetadata,
-    getMetadata: getMetadata
+    getMetadata: getMetadata,
+    postThingById: postThingById,
+    deleteThing: deleteThing
   }
 };
 
