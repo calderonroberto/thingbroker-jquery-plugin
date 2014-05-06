@@ -3,6 +3,8 @@ JQUERY THINGBROKER PLUGIN
 ## VERSION
 
 Plugin version: 0.3.0
+..
+
 
 ## CHANGE LOG
 2012.08.01-Roberto: First Version of this Requirements Document.
