@@ -3,7 +3,7 @@ JQUERY THINGBROKER PLUGIN
 ## VERSION
 
 Plugin version: 0.3.0
-..
+
 
 
 ## CHANGE LOG
@@ -11,7 +11,7 @@ Plugin version: 0.3.0
 2012.08.09-Roberto: First Version of the plugin.
 2012.10.29-Roberto: Second Version of the plugin using the new ThingBroker
 2012.03.08-Roberto: Third Version of the plugin using the latest version of ThingBroker supporting thing-following
-
+2014.05.05-Roberto: Fourth Version of the plugin, pulling events now supports long pulling when using low-level functions, unless a limit value is passed to function.
 
 ## INTRODUCTION
 
